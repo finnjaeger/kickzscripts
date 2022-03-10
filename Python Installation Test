@@ -1,0 +1,90 @@
+from textwrap import fill
+from openpyxl import formatting
+from openpyxl import Workbook, styles
+from openpyxl.drawing.image import Image
+from openpyxl.utils import get_column_letter
+from instascrape import *
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.service import Service
+import string
+
+def main ():
+    wb = Workbook()
+    ws = wb.active
+    #service = Service("/Users/finn/Kickz Werkstudent/Scripts/chromedriver")
+    browser = webdriver.Chrome("/Users/finn/Kickz Werkstudent/Scripts/chromedriver")
+    #browser = webdriver.Chrome(ChromeDriverManager().install())
+
+    redColor = "f75a45"
+    greenColor = "9dde90"
+
+    redFill = styles.PatternFill(start_color=redColor, end_color=redColor, fill_type="solid")
+    greenFill = styles.PatternFill(start_color=greenColor, end_color=greenColor, fill_type="solid")
+    ws["C7"]="Y"
+    #ws.conditional_formatting.add('A6:K9', formatting.rule.CellIsRule(operator='containsText', text='N', fill=redFill))
+    #ws.conditional_formatting.add('A6:K9', formatting.rule.CellIsRule(operator='containsText', text='Y', fill=greenFill))
+
+    setUpRowTitles(ws)
+    ws.column_dimensions[get_column_letter(1)].autosize = True
+
+    session_id = "2223217428%3AYo2jQo7ShQdgtc%3A5"
+
+    headers = {"user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36 Edg/87.0.664.57",
+               "cookie": f"sessionid={session_id};"}
+
+    kickz93 = Profile("https://www.instagram.com/kickz93/")
+    kickz93.scrape(headers=headers)
+    kickz93.url = "https://www.instagram.com/kickz93/"
+    #recent_posts = kickz93.get_recent_posts(amt=12)
+    recent_posts = kickz93.get_posts(browser, amount=5)
+
+    print(recent_posts)
+
+    column = 2
+
+    for post in recent_posts:
+        print("-------")
+        print(dir(post))
+        print("-----------")
+        addPostToTable(ws, post, column)
+        ws.column_dimensions[get_column_letter(column)].autosize = True
+        column = column + 1
+
+    
+    ws.row_dimensions[3].height = 100
+
+    wb.save(filename= "/Users/finn/Kickz Werkstudent/Python Webscraper/ExcelDaten.xlsx")
+
+def setUpRowTitles(ws):
+    ws["A1"] = "PostId"
+    ws["A2"] = "Postdatum"
+    ws["A3"] = "Title Image"
+    ws["A4"] = "Likes"
+    ws["A5"] = "Comments"
+    ws["A6"] = "Basketball Performance"
+    ws["A7"] = "Basketball Specific"
+    ws["A8"] = "Streetwear"
+    ws["A9"] = "Kickz Brand post"
+
+
+def addPostToTable(ws, post, column):
+    if not post.is_video:
+            post.download(f"/Users/finn/Kickz Werkstudent/Python Webscraper/{post.shortcode}.png")
+            image = Image(f"/Users/finn/Kickz Werkstudent/Python Webscraper/{post.shortcode}.png")
+            width = image.width
+            factor = 100/width
+            image.width = image.width * factor
+            image.height = image.height * factor
+            ws.add_image(img= image, anchor= f'{get_column_letter(column)}3')
+    
+    ws[f"{get_column_letter(column)}1"] = post.shortcode
+    value = datetime.datetime.fromtimestamp(post.timestamp)
+    ws[f"{get_column_letter(column)}2"] = value
+    ws[f"{get_column_letter(column)}4"] = post.likes
+    ws[f"{get_column_letter(column)}5"] = post.comments
+
+
+if __name__ == "__main__":
+    main()
