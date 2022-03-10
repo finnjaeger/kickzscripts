@@ -30,13 +30,16 @@ xl_entry.insert(0, "Output File Name")
 st_entry.insert(0, "Starting from")
 
 def submit():
-    print(f"Username: {un_entry.get()}")
-    print(f"Password: {pw_entry.get()}")
-    print(f"Scraping Account: {sc_entry.get()}")
-    print(f"Path: {pt_entry.get()}")
-    print(f"Amount:{amt_entry.get()}")
-    print(f"Download pics: {dl.get()}")
-    scrape(account_name=un_entry.get(), account_password=pw_entry.get(), scraping_account=sc_entry.get(), saving_location=pt_entry.get(), postAmount=amt_entry.get(), excel_sheet_output_name=xl_entry.get(), starting_from_post_nr=st_entry.get(), download_pics=dl.get())
+    scrape(
+        account_name=un_entry.get(),
+        account_password=pw_entry.get(),
+        scraping_account=sc_entry.get(),
+        saving_location=pt_entry.get(),
+        postAmount=amt_entry.get(),
+        excel_sheet_output_name=xl_entry.get(),
+        starting_from_post_nr=st_entry.get(),
+        download_pics=dl.get()
+    )
 
 #Initialization of the download checkbox and the login button
 downloadCheckbox = Checkbutton(root, text='Download Pictures', variable=dl, onvalue=True, offvalue=False)

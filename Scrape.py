@@ -11,13 +11,8 @@ from openpyxl.utils import get_column_letter
 
 def scrape(postAmount, account_name, account_password, scraping_account, saving_location, excel_sheet_output_name, starting_from_post_nr, download_pics):
 
-    print(f"Post Amount: {postAmount}")
-    print(f"Account Name: {account_name}")
-    print(f"Account Password: {account_password}")
-    print(f"Scraping Account: {scraping_account}")
-    print(f"Saving Location: {saving_location}")
-    print(f"Excel Sheet Output Name {excel_sheet_output_name}")
-    print(f"Download Files: {download_pics}")
+    #Print The Settings arccording to which scraping commences
+    printScrapeSettings(postAmount, account_name, account_password, scraping_account, saving_location, excel_sheet_output_name, download_pics)
 
     #Setting Up Instagrapi Client
     cl = Client()
@@ -137,6 +132,17 @@ def addPostToExcel(post: Post, column: int, ws, download_pics: bool):
         row = row + 1
     ws.column_dimensions[get_column_letter(column)].autosize = True
 
+def printScrapeSettings(postAmount, account_name, account_password, scraping_account, saving_location, excel_sheet_output_name, download_pics):
+    print("------------------------------")
+    print("Scrape Settings")
+    print(f"Post Amount: {postAmount}")
+    print(f"Account Name: {account_name}")
+    print(f"Account Password: {account_password}")
+    print(f"Scraping Account: {scraping_account}")
+    print(f"Saving Location: {saving_location}")
+    print(f"Excel Sheet Output Name {excel_sheet_output_name}")
+    print(f"Download Files: {download_pics}")
+    print("------------------------------")
 
 def setUpRowTitles(ws):
     ws["A1"] = "PostId"
