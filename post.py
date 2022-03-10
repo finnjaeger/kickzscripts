@@ -20,6 +20,7 @@ class Post:
     hashtags = []
     brand = "Misc"
     category = "None"
+    link = "Null"
 
     def __init__(self, sc, tn, l, com, cap, dt, p, typ, ht):
         self.pk = p
@@ -30,7 +31,8 @@ class Post:
         self.caption = cap
         self.datetime = dt
         self.post_type = typ
-        self.hashtags = ht 
+        self.hashtags = ht
+        self.link = f"https://instagram.com/p/{sc}"
 
 
     def findCategory(self, tags: list):

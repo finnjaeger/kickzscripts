@@ -71,7 +71,7 @@ def scrape(postAmount, account_name, account_password, scraping_account, saving_
         column = column + 1
 
     #Save Excel Sheet
-    ws.row_dimensions[3].height = 100
+    ws.row_dimensions[4].height = 100
     wb.save(filename= f"{saving_location}/{excel_sheet_output_name}.xlsx")
     print("Done!")
 
@@ -115,13 +115,14 @@ def addPostToExcel(post: Post, column: int, ws, download_pics: bool):
             ws.add_image(img= image, anchor= f'{get_column_letter(column)}3')
 
     ws[f"{get_column_letter(column)}1"] = post.shortcode
-    ws[f"{get_column_letter(column)}2"] = post.datetime.isoformat()
-    ws[f"{get_column_letter(column)}4"] = post.likes
-    ws[f"{get_column_letter(column)}5"] = post.comments
-    ws[f"{get_column_letter(column)}6"] = post.caption
-    ws[f"{get_column_letter(column)}7"] = post.category
-    ws[f"{get_column_letter(column)}8"] = post.brand
-    row = 9
+    ws[f"{get_column_letter(column)}2"] = post.link
+    ws[f"{get_column_letter(column)}3"] = post.datetime.isoformat()
+    ws[f"{get_column_letter(column)}5"] = post.likes
+    ws[f"{get_column_letter(column)}6"] = post.comments
+    ws[f"{get_column_letter(column)}7"] = post.caption
+    ws[f"{get_column_letter(column)}8"] = post.category
+    ws[f"{get_column_letter(column)}9"] = post.brand
+    row = 10
     for hashtag in post.hashtags:
         ws[f"{get_column_letter(column)}{row}"] = hashtag
         row = row + 1
@@ -130,14 +131,15 @@ def addPostToExcel(post: Post, column: int, ws, download_pics: bool):
 
 def setUpRowTitles(ws):
     ws["A1"] = "PostId"
-    ws["A2"] = "Postdatum"
-    ws["A3"] = "Title Image"
-    ws["A4"] = "Likes"
-    ws["A5"] = "Comments"
-    ws["A6"] = "Caption"
-    ws["A7"] = "Category"
-    ws["A8"] = "Brand"
-    ws["A9"] = "Hashtags"
+    ws["A2"] = "Postlink"
+    ws["A3"] = "Postdatum"
+    ws["A4"] = "Title Image"
+    ws["A5"] = "Likes"
+    ws["A6"] = "Comments"
+    ws["A7"] = "Caption"
+    ws["A8"] = "Category"
+    ws["A9"] = "Brand"
+    ws["A10"] = "Hashtags"
 
 if __name__ == "__main__":
     #Options
