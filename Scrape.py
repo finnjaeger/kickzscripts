@@ -116,7 +116,7 @@ def addPostToExcel(post: Post, column: int, ws, download_pics: bool):
             factor = 100/width
             image.width = image.width * factor
             image.height = image.height * factor
-            ws.add_image(img= image, anchor= f'{get_column_letter(column)}3')
+            ws.add_image(img= image, anchor= f'{get_column_letter(column)}4')
 
     ws[f"{get_column_letter(column)}1"] = post.shortcode
     ws[f"{get_column_letter(column)}2"] = post.link
