@@ -48,7 +48,7 @@ class Post:
                 c = categories[hashtag]
                 break
             except:
-                print()
+                pass
         return c
 
 
@@ -187,7 +187,7 @@ class Post:
                 b = brands[hashtag]
                 break
             except:
-                print()
+                pass
         return b  
                 
 
