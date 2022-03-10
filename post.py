@@ -34,9 +34,11 @@ class Post:
         self.hashtags = ht
         self.link = f"https://instagram.com/p/{sc}"
 
-
+    #Determines Category of Post depending on Hashtags
     def findCategory(self, tags: list):
         c = "None"
+
+        #Mapping hashtags to categories, add additional entries to consider more Hashtags or Categories
         categories = {
             "basketballobsessed": "Basketball",
             "streetwear": "Streetwear",
@@ -51,9 +53,11 @@ class Post:
                 pass
         return c
 
-
+    #Determines Brand of Post depending on Hashtags
     def findBrand(self, tags: list):
         b = "Misc"
+
+        #Mapping hashtags to brands, add additional entries to consider other brands
         brands = {
             "47": "47",
             "adidasoriginals": "adidas",

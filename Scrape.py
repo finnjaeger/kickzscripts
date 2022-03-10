@@ -1,4 +1,3 @@
-from asyncio import SafeChildWatcher
 import re
 from importlib import resources
 from turtle import down
@@ -18,6 +17,7 @@ def scrape(postAmount, account_name, account_password, scraping_account, saving_
     print(f"Scraping Account: {scraping_account}")
     print(f"Saving Location: {saving_location}")
     print(f"Excel Sheet Output Name {excel_sheet_output_name}")
+    print(f"Download Files: {download_pics}")
 
     #Setting Up Instagrapi Client
     cl = Client()
@@ -34,14 +34,19 @@ def scrape(postAmount, account_name, account_password, scraping_account, saving_
     lastPost = int(postAmount) + int(starting_from_post_nr)
     scraping_account_posts = cl.user_medias(scraping_account_user_id, amount=lastPost)
     print("Finished getting posts...")
+
+    #Cutting off all posts that are not going to be considered (All posts until starting Post)
     del scraping_account_posts[:int(starting_from_post_nr)]
+
     #Empty List for Posts (Type: Post)
     post_list = []
 
     #Creating a new Post for every Element in post_data
     loadingProgress = 1
 
+    #Handle every entry of scraping_account_posts (Add Post object, download, etc.)
     for post_data in scraping_account_posts:
+        #Create new Post object
         newPost = Post(
             sc = post_data.code,
             dt = post_data.taken_at,
@@ -56,8 +61,10 @@ def scrape(postAmount, account_name, account_password, scraping_account, saving_
         newPost.brand = newPost.findBrand(tags = newPost.hashtags)
         newPost.category = newPost.findCategory(tags=newPost.hashtags)
 
+        #Download post
         if download_pics:
             downloadMedia(newPost, cl, saving_location)
+
         post_list.append(newPost)
         print(f"Post added...{loadingProgress}/{postAmount}")
         loadingProgress = loadingProgress + 1
@@ -76,9 +83,10 @@ def scrape(postAmount, account_name, account_password, scraping_account, saving_
     print("Done!")
 
 
-
+#Derive hashtags from the caption and return them as a list of strings
 def getHashtags(caption:str):
     return re.findall(r"#(\w+)", caption)
+
 
 def downloadMedia(post: Post, cl: Client, saving_location):
     if post.thumbnail == "Error":
@@ -91,7 +99,7 @@ def downloadMedia(post: Post, cl: Client, saving_location):
         else:
             post.photoLocation = "images/Platzhalter.jpg"
 
-
+#Derive url to Thumnail pic
 def getThumbnailString(post_data):
     url = "Platzhalter.jpg"
     if post_data.media_type == 1:
@@ -105,6 +113,7 @@ def getThumbnailString(post_data):
                 url = "Error"    
     return url
 
+#Put post Data into Excel Sheet
 def addPostToExcel(post: Post, column: int, ws, download_pics: bool):
     if (post.post_type == PostType.PHOTO or post.post_type == PostType.ALBUM) & download_pics:
             image = Image(post.photoLocation)
